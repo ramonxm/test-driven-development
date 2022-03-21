@@ -2,6 +2,9 @@ import remove from "lodash/remove";
 import find from "lodash/find";
 import Money from "dinero.js";
 
+const FIFTY_PERCENT_OFF = 50;
+const FORTY_PERCENT_OFF = 40; 
+
 const calculatePercentageDiscount = (amount, item) => {
   if (item.condition?.percentage && item.quantity > item.condition.minimum) {
     return amount.percentage(item.condition.percentage);
@@ -11,8 +14,9 @@ const calculatePercentageDiscount = (amount, item) => {
 };
 
 const calculateQuantityDiscount = (amount, item) => {
+  const isEven = item.quantity % 2 === 0; 
   if (item.condition?.quantity && item.quantity > item.condition.quantity) {
-    return amount.percentage(50);
+    return amount.percentage(isEven ? FIFTY_PERCENT_OFF : FORTY_PERCENT_OFF);
   }
 
   return Money({ amount: 0 });
