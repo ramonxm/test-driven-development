@@ -12,7 +12,7 @@ export default class Cart {
   }
 
   remove(product) {
-    remove(this.items,{ product })
+    remove(this.items, { product });
   }
 
   getTotal() {
@@ -22,10 +22,23 @@ export default class Cart {
     );
   }
 
-  checkout() {
+  summary() {
+    const total = this.getTotal();
+    const items = this.items;
+
     return {
-      total: this.getTotal(),
-      items: this.items,
-    }
+      total,
+      items,
+    };
+  }
+
+  checkout() {
+    const { total, items } = this.summary()
+
+    this.items = [];
+    return {
+      total,
+      items,
+    };
   }
 }
