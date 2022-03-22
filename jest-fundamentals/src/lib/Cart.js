@@ -5,17 +5,17 @@ import Money from "dinero.js";
 const FIFTY_PERCENT_OFF = 50;
 const FORTY_PERCENT_OFF = 40;
 
-const calculatePercentageDiscount = (amount, item) => {
-  if (item.condition?.percentage && item.quantity > item.condition.minimum) {
-    return amount.percentage(item.condition.percentage);
+const calculatePercentageDiscount = (amount, { condition, quantity }) => {
+  if (condition?.percentage && quantity > condition.minimum) {
+    return amount.percentage(condition.percentage);
   }
 
   return Money({ amount: 0 });
 };
 
-const calculateQuantityDiscount = (amount, item) => {
-  const isEven = item.quantity % 2 === 0;
-  if (item.condition?.quantity && item.quantity > item.condition.quantity) {
+const calculateQuantityDiscount = (amount, { condition, quantity }) => {
+  const isEven = quantity % 2 === 0;
+  if (condition?.quantity && quantity > condition.quantity) {
     return amount.percentage(isEven ? FIFTY_PERCENT_OFF : FORTY_PERCENT_OFF);
   }
 
@@ -63,12 +63,12 @@ export default class Cart {
   }
 
   getTotal() {
-    return this.items.reduce((acc, item) => {
-      const amount = Money({ amount: item.quantity * item.product.price });
+    return this.items.reduce((acc, { quantity, product, condition }) => {
+      const amount = Money({ amount: quantity * product.price });
       let discount = Money({ amount: 0 });
 
-      if (item.condition) {
-        discount = calculateDiscount(amount, item.quantity, item.condition);
+      if (condition) {
+        discount = calculateDiscount(amount, quantity, condition);
       }
 
       return acc.add(amount).subtract(discount);
@@ -76,11 +76,13 @@ export default class Cart {
   }
 
   summary() {
-    const total = this.getTotal().getAmount();
+    const total = this.getTotal();
+    const formatted = total.toFormat("$0,0.00");
     const items = this.items;
 
     return {
       total,
+      formatted,
       items,
     };
   }
@@ -90,7 +92,7 @@ export default class Cart {
 
     this.items = [];
     return {
-      total,
+      total: total.getAmount(),
       items,
     };
   }
