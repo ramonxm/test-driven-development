@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "dependencies": {
     "next": "12.1.5",
@@ -14,9 +16,15 @@
     "react-dom": "18.1.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^8.13.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.1.1",
     "autoprefixer": "^10.4.5",
+    "babel-jest": "^28.0.2",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.5",
+    "jest": "^28.0.2",
+    "jest-environment-jsdom": "^28.0.2",
     "postcss": "^8.4.12",
     "tailwindcss": "^3.0.24"
   }
