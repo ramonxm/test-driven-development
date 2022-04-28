@@ -1,4 +1,4 @@
-import ProductCard from '../components/product-cart';
+import ProductCard from '../components/product-card';
 import Search from '../components/search';
 
 export default function Home() {

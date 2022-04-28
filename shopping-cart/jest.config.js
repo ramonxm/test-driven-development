@@ -5,4 +5,5 @@ module.exports = {
     '^.+\\.js$': require.resolve('babel-jest'),
   },
   testEnvironment: 'jest-environment-jsdom',
+  collectCoverageFrom: ['<rootDir>/components/*.{js,jsx}','<rootDir>/pages/*.{js,jsx}', '!**/node_modules/**'],
 }
