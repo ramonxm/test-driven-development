@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function CartItem({ product }) {
   const [quantity, setQuantity] = useState(1);
 
-  const handleIncrease = () => setQuantity(prevState => prevState + 1);
-  const handleDecrease = () => setQuantity(prevState =>
-     prevState > 0 ? prevState - 1 : 0
-  );
+  const handleIncrease = () => setQuantity((prevState) => prevState + 1);
+  const handleDecrease = () =>
+    setQuantity((prevState) => (prevState > 0 ? prevState - 1 : 0));
 
   return (
     <div data-testid="cart-item" className="flex justify-between mt-6">

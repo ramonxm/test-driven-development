@@ -1,6 +1,6 @@
 const config = require('./jest.config');
 
 module.exports = {
-  ...config, 
+  ...config,
   testMatch: ['**/?(*.unit.)+(spec|test).[jt]s?(x)'],
-}
+};

@@ -6,11 +6,13 @@ export default function ProductCard({ product, addToCard }) {
           data-testid="image"
           className="flex items-end justify-end h-56 w-full bg-cover"
           style={{
-            backgroundImage:
-              `url(${product.image})`,
+            backgroundImage: `url(${product.image})`,
           }}
         >
-          <button onClick={() => addToCard(product)} className="p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
+          <button
+            onClick={() => addToCard(product)}
+            className="p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
+          >
             <svg
               className="h-5 w-5"
               fill="none"
