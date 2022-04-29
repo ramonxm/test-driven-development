@@ -1,15 +1,26 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import { makeServer } from '../miragejs/server';
 import ProductList from '../pages';
 
 const renderProductList = () => render(<ProductList />);
 
 describe('ProductCard', () => {
+  let server;
+
+  beforeEach(() => {
+    server = makeServer({ environment: 'test' });
+  });
+  afterEach(() => {
+    server.shutdown();
+  });
+
   it('should render', () => {
     renderProductList();
     expect(screen.getByTestId('product-list')).toBeInTheDocument();
   });
 
-  fit('should render the ProductCard component 10 times', async () => {
+  it('should render the ProductCard component 10 times', async () => {
+    server.createList('product', 10);
     renderProductList();
 
     await waitFor(() => {
