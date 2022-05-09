@@ -1,7 +1,7 @@
 import { Server } from 'miragejs';
 import factories from './factories';
-import routes from './routes';
 import models from './models';
+import routes from './routes';
 import seeds from './seeds';
 
 const config = (environment) => {

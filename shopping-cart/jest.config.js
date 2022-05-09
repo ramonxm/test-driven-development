@@ -8,6 +8,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/components/*.{js,jsx}',
     '<rootDir>/pages/*.{js,jsx}',
+    '<rootDir>/hooks/*.{js,jsx}',
     '!**/node_modules/**',
   ],
 };

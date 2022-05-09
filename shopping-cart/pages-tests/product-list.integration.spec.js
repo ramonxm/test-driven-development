@@ -27,10 +27,28 @@ describe('ProductCard', () => {
       expect(screen.getAllByTestId('product-card')).toHaveLength(10);
     });
   });
-  it.todo('should render the no products message');
+  it('should render the "no products message"', async () => {
+    renderProductList();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('no-products')).toBeInTheDocument();     
+    })
+  });
+  it('should display error message when promise is rejected', async () => {
+    server.get('products', () => {
+      throw new Error('Server is down');
+    })
+    renderProductList();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('server-error')).toBeInTheDocument();
+      expect(screen.queryByTestId('no-products')).toBeNull();
+      expect(screen.queryAllByTestId('product-card')).toHaveLength(0);
+
+    })
+  });
   it.todo('should render the Search component');
   it.todo('should filter the products list when a search is performed');
-  it.todo('should display error message when promise is rejected');
   it.todo('should display the total quantity of products');
   it.todo('should display product (singular) when there is only 1 product');
 });
