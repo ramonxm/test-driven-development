@@ -3,10 +3,12 @@ import ProductCard from '../components/product-card';
 import Search from '../components/search';
 
 import { useFetchProducts } from '../hooks/use-fetch-products';
+import { useCartStore } from '../store/cart';
 export default function Home() {
   const { error, products } = useFetchProducts();
   const [term, setTerm] = useState('');
   const [localProducts, setLocalProducts] = useState([]);
+  const addToCart = useCartStore((store) => store.actions.add);
 
   useEffect(() => {
     if (term === '') {
@@ -23,7 +25,7 @@ export default function Home() {
       return <h4 data-testid="no-products">No products</h4>;
     }
     return localProducts.map((product) => (
-      <ProductCard key={product.id} product={product} />
+      <ProductCard key={product.id} product={product} addToCard={addToCart} />
     ));
   };
 

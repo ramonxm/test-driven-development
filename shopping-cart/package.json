@@ -20,7 +20,8 @@
     "axios": "^0.27.2",
     "next": "12.1.5",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "@testing-library/dom": "^8.13.0",
