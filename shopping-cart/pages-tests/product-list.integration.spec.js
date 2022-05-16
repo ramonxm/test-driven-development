@@ -47,8 +47,9 @@ describe('ProductCard', () => {
 
     })
   });
-  it.todo('should render the Search component');
-  it.todo('should filter the products list when a search is performed');
+  it('should filter the products list when a search is performed', async () => {
+    
+  });
   it.todo('should display the total quantity of products');
   it.todo('should display product (singular) when there is only 1 product');
 });

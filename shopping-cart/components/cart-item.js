@@ -14,11 +14,11 @@ export default function CartItem({ product }) {
         <img
           className="h-20 w-20 object-cover rounded"
           data-testid="image"
-          src={product.image}
-          alt={product.title}
+          src={product?.image}
+          alt={product?.title}
         />
         <div className="mx-3">
-          <h3 className="text-sm text-gray-600">{product.title}</h3>
+          <h3 className="text-sm text-gray-600">{product?.title}</h3>
           <div className="flex items-center mt-2">
             <button
               onClick={handleDecrease}
@@ -58,7 +58,7 @@ export default function CartItem({ product }) {
           </div>
         </div>
       </div>
-      <span className="text-gray-600">${product.price}</span>
+      <span className="text-gray-600">${product?.price}</span>
     </div>
   );
 }
