@@ -1,33 +1,46 @@
 import create from 'zustand';
+import produce from 'immer';
 
 const initialState = {
   open: false,
   products: [],
 };
 
-const addProduct = ({ products }, product) => {
-  if (products.includes(product)) {
-    return products;
-  }
-  return [...products, product];
-};
+const useCartStore = create((set) => {
+  const setState = (fn) => set(produce(fn));
 
-const useCartStore = create((set) => ({
-  state: {
-    ...initialState,
-  },
-  actions: {
-    reset: () => set(() => ({ state: { ...initialState } })),
-    toggle: () =>
-      set((store) => ({ state: { ...store.state, open: !store.state.open } })),
-    add: (product) =>
-      set((store) => ({
-        state: {
-          open: true,
-          products: addProduct(store.state, product),
-        },
-      })),
-  },
-}));
+  return {
+    state: {
+      ...initialState,
+    },
+    actions: {
+      reset() {
+        setState((store) => {
+          store.state = initialState;
+        });
+      },
+      toggle() {
+        setState(({ state }) => {
+          state.open = !state.open;
+        });
+      },
+      add(product) {
+        setState(({ state }) => {
+          const doesntExist = !state.products.find(
+            ({ id }) => id === product.id,
+          );
+
+          if (doesntExist) {
+            if (!product.quantity) {
+              product.quantity = 1;
+            }
+            state.products.push(product);
+            state.open = true;
+          }
+        });
+      },
+    },
+  };
+});
 
 export { useCartStore };
