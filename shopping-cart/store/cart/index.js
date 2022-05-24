@@ -6,7 +6,7 @@ const initialState = {
   products: [],
 };
 
-const useCartStore = create((set) => {
+export const useCartStore = create((set) => {
   const setState = (fn) => set(produce(fn));
 
   return {
@@ -14,11 +14,6 @@ const useCartStore = create((set) => {
       ...initialState,
     },
     actions: {
-      reset() {
-        setState((store) => {
-          store.state = initialState;
-        });
-      },
       toggle() {
         setState(({ state }) => {
           state.open = !state.open;
@@ -31,6 +26,7 @@ const useCartStore = create((set) => {
           );
 
           if (doesntExist) {
+            /*istanbul ignore next line */
             if (!product.quantity) {
               product.quantity = 1;
             }
@@ -39,8 +35,47 @@ const useCartStore = create((set) => {
           }
         });
       },
+      increase(product) {
+        setState(({ state }) => {
+          const localProduct = state.products.find(
+            ({ id }) => id === product.id,
+          );
+          if (localProduct) {
+            localProduct.quantity++;
+          }
+        });
+      },
+      decrease(product) {
+        setState(({ state }) => {
+          const localProduct = state.products.find(
+            ({ id }) => id === product.id,
+          );
+          if (localProduct && localProduct.quantity > 0) {
+            localProduct.quantity--;
+          }
+        });
+      },
+      remove(product) {
+        setState(({ state }) => {
+          const exists = !!state.products.find(({ id }) => id === product.id);
+
+          if (exists) {
+            state.products = state.products.filter(({ id }) => {
+              return id !== product.id;
+            });
+          }
+        });
+      },
+      removeAll() {
+        setState(({ state }) => {
+          state.products = [];
+        });
+      },
+      reset() {
+        setState((store) => {
+          store.state = initialState;
+        });
+      },
     },
   };
 });
-
-export { useCartStore };

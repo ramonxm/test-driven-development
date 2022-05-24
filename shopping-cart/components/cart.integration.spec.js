@@ -1,11 +1,10 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { render, screen } from '@testing-library/react';
+import { renderHook, act as hooksAct } from '@testing-library/react-hooks';
+import { screen, render } from '@testing-library/react';
 import { useCartStore } from '../store/cart';
 import { makeServer } from '../miragejs/server';
-import userEvent from '@testing-library/user-event';
 import { setAutoFreeze } from 'immer';
+import userEvent from '@testing-library/user-event';
 import Cart from './cart';
-
 
 setAutoFreeze(false);
 
@@ -18,12 +17,12 @@ describe('Cart', () => {
   let reset;
 
   beforeEach(() => {
-    server = makeServer();
-    result = renderHook(() => useCartStore()).result.current.actions;
-    add = result.add;
-    toggle = result.toggle;
-    reset = result.reset;
-    spy = jest.spyOn(result, 'toggle');
+    server = makeServer({ environment: 'test' });
+    result = renderHook(() => useCartStore()).result;
+    add = result.current.actions.add;
+    reset = result.current.actions.reset;
+    toggle = result.current.actions.toggle;
+    spy = jest.spyOn(result.current.actions, 'toggle');
   });
 
   afterEach(() => {
@@ -33,38 +32,67 @@ describe('Cart', () => {
 
   it('should add css class "hidden" in the component', () => {
     render(<Cart />);
+
     expect(screen.getByTestId('cart')).toHaveClass('hidden');
   });
 
-  it('should not add css class "hidden" in the component', () => {
-    act(() => {
-      toggle();
-    });
+  it('should remove css class "hidden" in the component', async () => {
     render(<Cart />);
+
+    await userEvent.click(screen.getByTestId('close-button'));
+
     expect(screen.getByTestId('cart')).not.toHaveClass('hidden');
   });
 
   it('should call store toggle() twice', async () => {
     render(<Cart />);
+
     const button = screen.getByTestId('close-button');
 
-    act(() => {
-      userEvent.click(button);
-      userEvent.click(button);
-    });
+    await userEvent.click(button);
+    await userEvent.click(button);
 
-    expect(spy).toHaveBeenCalledTimes(0);
+    expect(spy).toHaveBeenCalledTimes(2);
   });
   it('should display 2 products cards', () => {
     const products = server.createList('product', 2);
 
-    act(() => {
+    hooksAct(() => {
       for (const product of products) {
         add(product);
       }
     });
+
     render(<Cart />);
 
-    expect(screen.getAllByTestId('cart-item')).toHaveLength(2)
+    expect(screen.getAllByTestId('cart-item')).toHaveLength(2);
+  });
+
+  it('should remove all products when clear cart button is clicked', async () => {
+    const products = server.createList('product', 2);
+
+    hooksAct(() => {
+      for (const product of products) {
+        add(product);
+      }
+    });
+
+    render(<Cart />);
+
+    expect(screen.getAllByTestId('cart-item')).toHaveLength(2);
+
+    const button = screen.getByRole('button', { name: /clear cart/i });
+
+    await userEvent.click(button);
+
+    expect(screen.queryAllByTestId('cart-item')).toHaveLength(0);
+  });
+
+  it('should not display clear cart button if no products are in the cart', async () => {
+    render(<Cart />);
+
+    expect(
+      screen.queryByRole('button', { name: /clear cart/i }),
+    ).not.toBeInTheDocument();
   });
 });
